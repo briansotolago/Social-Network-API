@@ -22,7 +22,6 @@ module.exports = {
       res.status(500).json(err);
     }
   },
-  // create a new video
   async createThought(req, res) {
     try {
       const thought = await Thought.create(req.body);
@@ -44,7 +43,6 @@ module.exports = {
       res.status(500).json(err);
     }
   },
-  
   async updateThought(req, res) {
     try {
       const thought = await Thought.findOneAndUpdate(
@@ -72,23 +70,17 @@ module.exports = {
       }
 
       const user = await User.findOneAndUpdate(
-        { username: req.body.username },
+        { username: req.params.username },
         { $pull: { thoughts: req.params.thoughtId } },
         { new: true }
       );
-
-      if (!user) {
-        return res
-          .status(404)
-          .json({ message: 'Thought created but no user with this id!' });
-      }
 
       res.json({ message: 'Thought successfully deleted!' });
     } catch (err) {
       res.status(500).json(err);
     }
   },
-  // Add a video response
+  // Add a Reaction response
   async addReaction(req, res) {
     try {
       const thought = await Thought.findOneAndUpdate(
@@ -106,17 +98,17 @@ module.exports = {
       res.status(500).json(err);
     }
   },
-  // Remove video response
+  // Remove Reaction response
   async removeReaction(req, res) {
     try {
       const thought = await Thought.findOneAndUpdate(
         { _id: req.params.thoughtId },
-        { $pull: { reactions: { reactionId: req.params.reactionId } } },
+        { $pull: { reactions: {reactionId:req.params.reactionId} } },
         { runValidators: true, new: true }
       )
 
       if (!thought) {
-        return res.status(404).json({ message: 'No thought with this id!' });
+        return res.status(404).json({ message: 'No reaction with this id!' });
       }
 
       res.json(thought);
